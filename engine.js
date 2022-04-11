@@ -39,6 +39,7 @@ function main() {
 
   player.corners = getCorners(player);
   player.tiles = getTilesInBounds(player);
+  console.log(player);
   //var intervalID = setInterval(update, 1000/30);
 }
 
@@ -153,15 +154,15 @@ function getTilesOnEdge(other,edge){
       edgeTiles.push(getTileIndex(x, other.corners[0].y - 1));
     }
   }else if(edge==1){//right edge
-    for(var y=other.corners[3].y;y<other.corners[1].x;y++){
-      edgeTiles.push(getTileIndex(other.corners[1].x + 1, y));
+    for(var y=other.corners[3].y;y<other.corners[1].y;y++){
+      edgeTiles.push(getTileIndex(other.corners[3].x + 1, y));
     }
   }else if(edge==2){//bottom edge
     for(var x=other.corners[2].x;x<other.corners[3].x;x++){
       edgeTiles.push(getTileIndex(x, other.corners[2].y + 1));
     }
   }else if(edge==3){//left edge
-    for(var y=other.corners[2].y;y<other.corners[0].x;y++){
+    for(var y=other.corners[2].y;y<other.corners[0].y;y++){
       edgeTiles.push(getTileIndex(other.corners[2].x - 1, y));
     }
   }
@@ -173,9 +174,9 @@ function getTilesInBounds(other){
   for(var y=other.y;y<other.size;y++){
     for(var x=other.x;x<other.size;x++){
       var tileIndex = getTileIndex(x,y);
-      console.log(tileIndex);
       if (contains(tilesInBounds, tileIndex) == false) {
         tilesInBounds.push(tileIndex);
+        console.log(tileIndex);
       }
     }
   }
@@ -277,9 +278,9 @@ function move(other, direction){
           //console.log(nextTiles);
         	canEnter = onEnter(other, nextTiles[i]);
           if(canEnter == true){
+          console.log("here");
           	other.tiles.push(nextTiles[i]);
           }
-          getTilesInBounds(other);
         }
       }
       for(var i=0;i<prevTiles.length;i++){
