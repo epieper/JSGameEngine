@@ -2,6 +2,12 @@
   <head>
     <title>Test</title>
     <style>
+      #board {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
       .preference {
         display: flex;
         width: 50%;
@@ -19,14 +25,8 @@
       <input type="number" name="boardHeight" id="boardHeight" onInput = "changeBoardHeight(this.value)">
     </div>
     <canvas id="board"></canvas>
-    <style>
-      #board {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-    </style>
-    <!--<script src="https://epieper.github.io/JSGameEngine/engine.js"></script> -->
+    
+    <script src="https://epieper.github.io/JSGameEngine/engine.js"></script>
+    
   </body>
 </html>
