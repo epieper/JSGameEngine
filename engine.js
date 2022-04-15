@@ -1,5 +1,3 @@
-const board_tile_width = 3;
-const board_tile_height = 3;
 const board_border = 'black';
 const board_background = "white";
 //const tile_col = 'lightblue';
@@ -13,16 +11,15 @@ const board = document.getElementById("board");
 // Return a two dimensional drawing context
 const board_ctx = board.getContext("2d");
 
-board.width = board_tile_width * tile_size;
-board.height = board_tile_height * tile_size;
+// Initialize board size
+var board_tile_width = 8;
+var board_tile_height = 8;
 
 // Initialize player position
 var player = {x:1, y:1, size:4, corners:[], tiles:[]};
 
 // Initialize tile array
 var tiles = [];
-
-var colliders = [];
 
 // Add key event listener
 document.addEventListener("keydown", movePlayer);
@@ -32,14 +29,18 @@ main();
 
 // main function called to start game
 function main() {
+	board.width = board_tile_width * tile_size;
+	board.height = board_tile_height * tile_size;
+  tiles = [];
+
   clearCanvas();
   generateTiles();
   drawTiles();
   drawPlayer();
 
+	player = {x:1, y:1, size:4, corners:[], tiles:[]};
   player.corners = getCorners(player);
   player.tiles = getTilesInBounds(player);
-  console.log(player);
   //var intervalID = setInterval(update, 1000/30);
 }
 
@@ -48,6 +49,20 @@ function update(){
   clearCanvas();
   drawTiles();
   drawPlayer();
+}
+
+function changeBoardWidth(value){
+	// Get the desired board width
+  value = parseInt(value);
+	board_tile_width = value;
+  main();
+}
+
+function changeBoardHeight(value){
+	// Get the desired board height
+  value = parseInt(value);
+	board_tile_height = value;
+  main();
 }
 
 //function to return color string given the r,g,b values
@@ -150,20 +165,20 @@ function getCorners(other){
 function getTilesOnEdge(other,edge){
   var edgeTiles = [];
   if(edge==0){ //top edge
-    for(var x=other.corners[0].x;x<other.corners[1].x;x++){
-      edgeTiles.push(getTileIndex(x, other.corners[0].y - 1));
+    for(var x=other.x;x<other.x+other.size;x++){
+      edgeTiles.push(getTileIndex(x, other.y - 1));
     }
   }else if(edge==1){//right edge
-    for(var y=other.corners[3].y;y<other.corners[1].y;y++){
-      edgeTiles.push(getTileIndex(other.corners[3].x + 1, y));
+    for(var y=other.y;y<other.y+other.size;y++){
+      edgeTiles.push(getTileIndex(other.x+other.size + 1, y));
     }
   }else if(edge==2){//bottom edge
-    for(var x=other.corners[2].x;x<other.corners[3].x;x++){
-      edgeTiles.push(getTileIndex(x, other.corners[2].y + 1));
+    for(var x=other.x;x<other.x+other.size;x++){
+      edgeTiles.push(getTileIndex(x, other.y+other.size + 1));
     }
   }else if(edge==3){//left edge
-    for(var y=other.corners[2].y;y<other.corners[0].y;y++){
-      edgeTiles.push(getTileIndex(other.corners[2].x - 1, y));
+    for(var y=other.y;y<other.y+other.size;y++){
+      edgeTiles.push(getTileIndex(other.x - 1, y));
     }
   }
   return edgeTiles;
@@ -257,6 +272,10 @@ function move(other, direction){
         nextTiles = getTilesOnEdge(other, 0);
       }
       for(var i=0;i<nextTiles.length;i++){
+      	if(nextTiles[i]>tiles.length){
+        	canEnter=false;
+          break;
+        }
         if(contains(other.tiles, nextTiles[i]) == false){
           var type = tiles[nextTiles[i]].type;
           if(type==1){
