@@ -128,7 +128,7 @@ function generateTiles(){
       var tileValue = 0;
       var tileColor = 'white';
       if(ty>=2){
-        tileValue=1;
+        tileType=1;
         tileColor='red';
       }
       tiles[tileIndex] = {x:tx, y:ty, type:tileType, value:tileValue, color:tileColor};
@@ -171,12 +171,11 @@ function getTilesOnEdge(other,edge){
 
 function getTilesInBounds(other){
   var tilesInBounds = [];
-  for(var y=other.y;y<other.size;y++){
+  for(var y=other.y + other.size;y>=other.y;y--){
     for(var x=other.x;x<other.size;x++){
       var tileIndex = getTileIndex(x,y);
       if (contains(tilesInBounds, tileIndex) == false) {
         tilesInBounds.push(tileIndex);
-        console.log(tileIndex);
       }
     }
   }
@@ -199,17 +198,7 @@ function getTileIndex(x,y){
 }
 
 function onEnter(other,tileIndex){
-  console.log(other + " entered [" +tiles[tileIndex].x + "," + tiles[tileIndex].y + "]");
-  var type = tiles[tileIndex].type;
-  if(type==1){
-    //type 1 = collider. return false, cannot enter
-    return false;
-  }
-  return true;
-}
-
-function onExit(other,tileIndex){
-  //console.log(other + " exited [" +tiles[tileIndex].x + "," + tiles[tileIndex].y + "]");
+  console.log("Entered [" +tiles[tileIndex].x + "," + tiles[tileIndex].y + "]");
 }
 
 function movePlayer(event){  
@@ -254,39 +243,30 @@ function move(other, direction){
     if(nextY<(board.height)-other.size && nextY>0){
       //check next position tiles types
       var nextTiles = [];
-      var prevTiles = [];
       var canEnter = true;
       if(direction.x==1){//moved right
         nextTiles = getTilesOnEdge(other, 1);
-        prevTiles = getTilesOnEdge(other, 3);
       }
       if(direction.x==-1){//moved left
         nextTiles = getTilesOnEdge(other, 3);
-        prevTiles = getTilesOnEdge(other, 1);
       }
       if(direction.y==1){//moved down
         nextTiles = getTilesOnEdge(other, 2);
-        prevTiles = getTilesOnEdge(other, 0);
       }
       if(direction.y==-1){//moved up
         nextTiles = getTilesOnEdge(other, 0);
-        prevTiles = getTilesOnEdge(other, 2);
       }
       for(var i=0;i<nextTiles.length;i++){
         if(contains(other.tiles, nextTiles[i]) == false){
-        	//console.log(other.tiles);
-          //console.log(nextTiles);
-        	canEnter = onEnter(other, nextTiles[i]);
-          if(canEnter == true){
-          console.log("here");
-          	other.tiles.push(nextTiles[i]);
+          var type = tiles[nextTiles[i]].type;
+          if(type==1){
+            //type 1 = cannot enter
+            canEnter = false;
           }
-        }
-      }
-      for(var i=0;i<prevTiles.length;i++){
-        if (contains(other.tiles, prevTiles[i]) == false) {
-          onExit(other, prevTiles[i]);
-          //removeElement(other.tiles, tiles[prevTiles[i]])
+          if(canEnter == true){
+            other.tiles.push(nextTiles[i]);
+            onEnter(other, nextTiles[i]);
+          }
         }
       }
       if(canEnter == true){
