@@ -1,8 +1,23 @@
 <html>
   <head>
-    <title>Test Game Engine</title>
+    <title>Test</title>
+    <style>
+      .preference {
+        display: flex;
+        width: 50%;
+        margin: .5rem;
+      }
+    </style>
   </head>
   <body>
+    <div class="preference">
+      <label for="boardWidth">Board Width:</label>
+      <input type="number" name="boardWidth" id="boardWidth" onInput = "changeBoardWidth(this.value)">
+    </div>
+    <div class="preference">
+      <label for="boardHeight">Board Height:</label>
+      <input type="number" name="boardHeight" id="boardHeight" onInput = "changeBoardHeight(this.value)">
+    </div>
     <canvas id="board"></canvas>
     <style>
       #board {
@@ -12,6 +27,6 @@
         transform: translate(-50%, -50%);
       }
     </style>
-    <script src="engine.js"></script>
+    <!--<script src="https://epieper.github.io/JSGameEngine/engine.js"></script> -->
   </body>
 </html>
